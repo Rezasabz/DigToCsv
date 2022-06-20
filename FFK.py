@@ -134,8 +134,6 @@ with open('fluxor_ff.txt') as fl:
                     tmp_NS = []
                     
 
-
-
         if additional_section in Lines[count]:
             tmp_additional_section_domain = []
             tmp_additional_section_ttl = []
@@ -159,8 +157,6 @@ with open('fluxor_ff.txt') as fl:
                     tmp_additional_section_ip = []
                     tmp_additional_section_ttl = []
                     tmp_additional_section_domain = []
-                
-
 
 
         if query_time in Lines[count]:
