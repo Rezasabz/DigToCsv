@@ -171,7 +171,6 @@ with open('fluxor_ff.txt') as fl:
         count += 1
         
 
-
 dd = {'Time':'', 'Domain':domains, 'opcodes':opcodes,'status':status,'id':ids,'flags': flags,'QUERY': query, 'ANSWER': answer, 'AUTHORITY': authority, 'ADDITIONAL': additional, 'QUESTION_TYPE':question_type, 'answer_serction_domain': answer_section_domain, 'answer_section_ttl': answer_section_ttl, 'answer_section_class': answer_section_class, 'answer_section_ip': answer_section_ip, 'authority_section_domain':authority_section_domain,'authority_section_class': authority_section_class, 'authority_section_NS': authority_section_NS, 'authority_section_ttl':authority_section_ttl, 'additional_section_domain': additional_section_domain, 'additional_section_class': additional_section_class, 'additional_section_ip': additional_section_ip, 'additional_section_ttl': additional_section_ttl, 'question_type': question_type, 'query_time_stamp_list': query_time_stamp_list, 'query_time_SERVER_list': query_time_SERVER_list, 'query_time__WHEN_list': query_time__WHEN_list}
 ds = pd.DataFrame(dd)
 ds.to_csv('fluxor_ff.csv', index=False)
