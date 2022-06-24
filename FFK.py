@@ -61,14 +61,15 @@ query_time_when = ";; WHEN: "
 query_time_msg_size = ";; MSG SIZE  rcvd:"
 
 count = 0
-with open('fluxor_ff.txt') as fl:
+with open('20090310_fluxor_ff_168.95.1.1-1.txt') as fl:
     Lines = fl.readlines()
     while count < len(Lines):
         if char_domain in Lines[count]:
             count += 1
             if connection_time_out not in Lines[count]:
-                d = re.findall('(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9][a-z0-9-]{0,61}[a-z0-9]' , Lines[count-1])
-                domains.append(d[1])
+
+                d = re.findall('(?:[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?\.)+[A-Za-z0-9][A-Za-z0-9-]{0,61}[A-Za-z0-9]' , Lines[count-1])
+                domains.append(not d[1] == '')
 
         if char_header in Lines[count]:
             opcodes.append(Lines[count].split(',')[0].split( )[3])
@@ -81,8 +82,11 @@ with open('fluxor_ff.txt') as fl:
             additional.append(re.sub('\n','',Lines[count+1].split(',')[3].split(' ')[2]))
 
         if question_section in Lines[count]:
-            q_type = re.sub('\t',' ',re.sub('\n','',re.sub('\tIN','IN',Lines[count+1].split('\t\t')[1]))).split(' ')
-            question_type.append(q_type[1])
+            # print(re.sub('\s+',' ',re.sub('\t', ' ',Lines[count+1])).split(' ')[0])
+            question_domain.append(re.sub('\s+',' ',re.sub('\t', ' ',Lines[count+1])).split(' ')[0])
+            question_type.append(re.sub('\s+',' ',re.sub('\t', ' ',Lines[count+1])).split(' ')[2])
+            # q_type = re.sub('\t',' ',re.sub('\n','',re.sub('\tIN','IN',Lines[count+1].split('\t\t')[1]))).split(' ')
+            # question_type.append(q_type[1])
 
         if answer_section in Lines[count]:
             tmp_answer_section_domain = []
@@ -97,16 +101,24 @@ with open('fluxor_ff.txt') as fl:
                 tmp_answer_section_ip.append(re.sub('\s+',' ',Lines[count+1].strip()).split(' ')[4])
                 count += 1
 
+                if len(tmp_answer_section_domain) != len(query):
+                    # print("Error")
+                    tmp_answer_section_domain.append("0")
+
                 if Lines[count+1] == '\n':
                     answer_section_domain.append(tmp_answer_section_domain)
                     answer_section_ttl.append(tmp_answer_section_ttl)
                     answer_section_ip.append(tmp_answer_section_ip)
                     answer_section_class.append(tmp_answer_section_class)
+
+
                     
                     tmp_answer_section_class = []
                     tmp_answer_section_ip = []
                     tmp_answer_section_ttl = []
                     tmp_answer_section_domain = []
+
+
 
 
         if authority_section in Lines[count]:
@@ -115,6 +127,7 @@ with open('fluxor_ff.txt') as fl:
             tmp_class = []
             tmp_NS = []
             while Lines[count+1] != '\n':
+                # print(Lines[count+1])
                 tmp_domain.append(re.sub('\t','',Lines[count+1].strip().split('\t')[0]))
                 tmp_ttl.append(re.sub('\s+',' ',Lines[count+1].strip()).split(' ')[1])
                 tmp_class.append(re.sub('\s+',' ',Lines[count+1].strip()).split(' ')[3])
@@ -169,8 +182,40 @@ with open('fluxor_ff.txt') as fl:
             query_time__WHEN_list.append(re.sub('\n', '',Lines[count].split(':')[1]))
 
         count += 1
-        
 
-dd = {'Time':'', 'Domain':domains, 'opcodes':opcodes,'status':status,'id':ids,'flags': flags,'QUERY': query, 'ANSWER': answer, 'AUTHORITY': authority, 'ADDITIONAL': additional, 'QUESTION_TYPE':question_type, 'answer_serction_domain': answer_section_domain, 'answer_section_ttl': answer_section_ttl, 'answer_section_class': answer_section_class, 'answer_section_ip': answer_section_ip, 'authority_section_domain':authority_section_domain,'authority_section_class': authority_section_class, 'authority_section_NS': authority_section_NS, 'authority_section_ttl':authority_section_ttl, 'additional_section_domain': additional_section_domain, 'additional_section_class': additional_section_class, 'additional_section_ip': additional_section_ip, 'additional_section_ttl': additional_section_ttl, 'question_type': question_type, 'query_time_stamp_list': query_time_stamp_list, 'query_time_SERVER_list': query_time_SERVER_list, 'query_time__WHEN_list': query_time__WHEN_list}
+print("A ==> ", len(domains))
+print("B ==> ", len(opcodes))
+print("C ==> ", len(status))
+print("D ==> ", len(ids))
+print("E ==> ", len(flags))
+
+print("1 ==> ",len(query))
+
+print("2 ==> ",len(answer))
+
+print("3 ==> ",len(authority))
+print("4 ==> ",len(additional))
+print("5 ==> ",len(question_domain))
+print("6 ==> ",len(question_type))
+print("6 ==> ",len(answer_section_domain))
+
+print("7 ==> ",len(answer_section_ttl))
+print("8 ==> ",len(answer_section_ip))
+print("9 ==> ",len(answer_section_class))
+print("10 ==> ",len(authority_section_domain))
+# print(authority_section_domain)
+print("11 ==> ",len(authority_section_ttl))
+print("12 ==> ",len(authority_section_class))
+print("13 ==> ",len(authority_section_NS))
+print("14 ==> ",len(additional_section_domain))
+print("15 ==> ",len(additional_section_ttl))
+print("16 ==> ",len(additional_section_ip))
+print("17 ==> ",len(additional_section_class))
+print("18 ==> ",len(query_time_stamp_list))
+print("19 ==> ",len(query_time_SERVER_list))
+print("20 ==> ",len(query_time__WHEN_list))
+
+
+dd = {'Time':'', 'Domain':domains, 'opcodes':opcodes,'status':status,'id':ids,'flags': flags,'QUERY': query, 'ANSWER': answer, 'AUTHORITY': authority, 'ADDITIONAL': additional, 'QUESTION': question_domain, 'QUESTION_TYPE':question_type, 'answer_serction_domain': answer_section_domain, 'answer_section_ttl': answer_section_ttl, 'answer_section_class': answer_section_class, 'answer_section_ip': answer_section_ip, 'authority_section_domain':authority_section_domain,'authority_section_class': authority_section_class, 'authority_section_NS': authority_section_NS, 'authority_section_ttl':authority_section_ttl, 'additional_section_domain': additional_section_domain, 'additional_section_class': additional_section_class, 'additional_section_ip': additional_section_ip, 'additional_section_ttl': additional_section_ttl, 'query_time_stamp_list': query_time_stamp_list, 'query_time_SERVER_list': query_time_SERVER_list, 'query_time__WHEN_list': query_time__WHEN_list}
 ds = pd.DataFrame(dd)
-ds.to_csv('fluxor_ff.csv', index=False)
+ds.to_csv('20090313_fluxor_ff_168.95.1.1.csv', index=False)
